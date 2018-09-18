@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default 
+  labels:
+    component: redis-master 
+  name: redis-master-nodeport
+spec:
+  type: NodePort
+  selector:
+    component: redis-master
+  ports:
+    - port: 6379 
+      targetPort: 6379
+      nodePort: 16379
+      name: cli
