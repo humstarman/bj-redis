@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet 
+metadata:
+  namespace: default
+  name: redis-master
+spec:
+  serviceName: "redis-master"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: redis-master
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: redis-master
+          image: 10.254.0.50:5000/redis:3.2
+          imagePullPolicy: Always
+          command: ["/workspace/entrypoint.active-backup.sh"]
+          env:
+            - name: DSCV
+              value: redis-master
+            - name: ROLE
+              value: MASTER 
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: redis-m-claim
+              mountPath: /data
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: redis-m-claim
+          persistentVolumeClaim:
+            claimName: redis-m-pv

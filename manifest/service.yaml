@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default 
+  labels:
+    svc: redis-master
+  name: redis-master
+spec:
+  clusterIP: 10.254.63.79
+  selector:
+    component: redis-master
+  ports:
+  - port: 6379 
+    targetPort: 6379
+    name: cli
