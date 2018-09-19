@@ -18,6 +18,7 @@ elif [ "$ROLE" == "SLAVE" ]; then
   echo "$(date -d today +'%Y-%m-%d %H:%M:%S') - [INFO]: $MASTER"
   [[ -z "$REDIS_PORT" ]] && REDIS_PORT=6379
   sed -i "s/# slaveof <masterip> <masterport>/slaveof $MASTER_IP $REDIS_PORT/g" ${REDIS_CONF}
+  sed -i "s/# masterauth <master-password>/masterauth root1234/g" ${REDIS_CONF}
 else
   echo "=== No such role as $ROLE."
   echo "=== Sleeping 10s before pod exit."
